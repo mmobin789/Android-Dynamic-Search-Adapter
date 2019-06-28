@@ -1,12 +1,16 @@
 package stacktex.mobin.search.adapter
 
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class DynamicSearchAdapter<T : DynamicSearchAdapter.Searchable>(private val searchableList: MutableList<T>) :
-    RecyclerView.Adapter<ViewHolder>() {
+        RecyclerView.Adapter<ViewHolder>(), Filterable {
 
     // Single not-to-be-modified copy of original data in the list.
     private val originalList = ArrayList(searchableList)
+    // a method-body to invoke when search returns nothing. It can be null.
+    private var onNothingFound: (() -> Unit)? = null
 
     /**
      * Searches a specific item in the list and updates adapter.
@@ -15,20 +19,36 @@ abstract class DynamicSearchAdapter<T : DynamicSearchAdapter.Searchable>(private
      * @param onNothingFound a method-body to invoke when search returns nothing. It can be null.
      */
     fun search(s: String?, onNothingFound: (() -> Unit)?) {
-        searchableList.clear()
-        if (s.isNullOrBlank()) {
-            searchableList.addAll(originalList)
-        } else {
-            val searchResults = originalList.filter { it.getSearchCriteria().contains(s) }
-            if (searchResults.isEmpty())
-                onNothingFound?.invoke()
-            else
-                searchableList.addAll(searchResults)
-        }
-        notifyDataSetChanged()
+        this.onNothingFound = onNothingFound
+        filter.filter(s)
 
     }
 
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            private val filterResults = FilterResults()
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                searchableList.clear()
+                if (constraint.isNullOrBlank()) {
+                    searchableList.addAll(originalList)
+                } else {
+                    val searchResults = originalList.filter { it.getSearchCriteria().contains(constraint) }
+                    searchableList.addAll(searchResults)
+                }
+                return filterResults.also {
+                    it.values = searchableList
+                }
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                // no need to use "results" filtered list provided by this method.
+                if (searchableList.isNullOrEmpty())
+                    onNothingFound?.invoke()
+                notifyDataSetChanged()
+
+            }
+        }
+    }
 
     interface Searchable {
         /** This method will allow to specify a search string to compare against
