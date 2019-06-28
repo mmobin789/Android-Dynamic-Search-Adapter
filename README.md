@@ -3,6 +3,7 @@ An abstract recycler view adapter (One for all) that provides a search feature t
 
 ## Features
  - Performance: O(n)
+ - Asynchronous
  - One Search adapter for every usage.
  - Accomodates Every list type which implements Searchable Interface.
  - Its not a fixed dependency to be included in your project to increase redundancy.
