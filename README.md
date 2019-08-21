@@ -14,5 +14,7 @@ An abstract recycler view adapter (One for all) that provides a search feature t
  - **It would be a part of your project while not implying any 3rd-party involvement.**
  
  ### How to use ?
-   
-   Just clone the project in Android Studio and run it. 
+
+   Just clone the project in Android Studio and run it.
+  
+   For details read more on [medium](https://android.jlelse.eu/search-on-recycler-view-android-e7661479481).
