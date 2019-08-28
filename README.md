@@ -11,6 +11,7 @@ An abstract recycler view adapter (One for all) that provides a search feature t
  - Modifications/Enhancements can be made as required.
  - Highly decoupled,optimized and clean code.
  - No Obfuscation Required (Proguard/Dexguard).
+ - Complete Documentation.
  - **It would be a part of your project while not implying any 3rd-party involvement.**
  
  ### How to use ?
