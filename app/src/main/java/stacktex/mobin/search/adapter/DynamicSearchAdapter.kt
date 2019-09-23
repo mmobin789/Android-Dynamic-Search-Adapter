@@ -32,7 +32,14 @@ abstract class DynamicSearchAdapter<T : DynamicSearchAdapter.Searchable>(private
                 if (constraint.isNullOrBlank()) {
                     searchableList.addAll(originalList)
                 } else {
-                    val searchResults = originalList.filter { it.getSearchCriteria().contains(constraint) }
+                        
+                    
+                        //Converting originalList to Lowercase also converting constraint into lowercase to make full Search, 
+                        //without lowercase our search is not working, Suppose if you have two names in your list (John steven and Steven john)
+                        // if you search 'John' you only get 'John steven', but when we make lowercase if you search 'John' you will get 
+                        //'John steven' and 'Steven John'
+               
+                    val searchResults = originalList.filter { it.getSearchCriteria().toLowerCase(Locale.getDefault()).contains(constraint.toString().toLowerCase(Locale.getDefault())) }
                     searchableList.addAll(searchResults)
                 }
                 return filterResults.also {
